@@ -19,7 +19,7 @@ public class TC02 {
         // navigate to the ParaBank website
         driver.get("https://parabank.parasoft.com/parabank/index.htm?ConnType=JDBC");
 
-        // click on the 'Log In' button
+        // clack on the 'Log In' button
         WebElement loginButton = driver.findElement(By.xpath("//a[contains(text(),'Log In')]"));
         loginButton.click();
 
