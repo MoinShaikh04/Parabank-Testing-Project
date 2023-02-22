@@ -1,0 +1,52 @@
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.*;
+
+public class ParaBankLogoutTest {
+
+    WebDriver driver;
+
+    @BeforeClass
+    public void setup() {
+        // Set up the driver
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver.exe");
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+    }
+
+    @Test
+    public void testLogout() {
+        // Navigate to the ParaBank website
+        driver.get("https://parabank.parasoft.com/parabank/index.htm");
+
+        // Enter valid login credentials and click the 'Log In' button
+        WebElement usernameField = driver.findElement(By.name("username"));
+        WebElement passwordField = driver.findElement(By.name("password"));
+        WebElement loginButton = driver.findElement(By.cssSelector("input[value='Log In']"));
+
+        usernameField.sendKeys("username");
+        passwordField.sendKeys("password");
+        loginButton.click();
+
+        // Verify that the user is logged in successfully
+        WebElement welcomeMessage = driver.findElement(By.cssSelector("p.welcome"));
+        Assert.assertTrue(welcomeMessage.isDisplayed(), "User is not logged in");
+
+        // Click the 'Log Out' button
+        WebElement logoutButton = driver.findElement(By.linkText("Log Out"));
+        logoutButton.click();
+
+        // Verify that the user is logged out and redirected to the homepage
+        WebElement homePageTitle = driver.findElement(By.tagName("h1"));
+        Assert.assertEquals(homePageTitle.getText(), "ParaBank", "User is not logged out and redirected to the homepage");
+    }
+
+    @AfterClass
+    public void teardown() {
+        // Close the driver
+        driver.quit();
+    }
+}
