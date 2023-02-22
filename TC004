@@ -1,0 +1,63 @@
+package project1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class TC04 {
+	
+	private WebDriver driver;
+	
+	@BeforeTest
+	public void setup() {
+		WebDriverManager.chromedriver().setup();
+		driver = new ChromeDriver();
+		driver.manage().window().maximize();
+		driver.get("https://parabank.parasoft.com/parabank/index.htm?ConnType=JDBC");
+	}
+	
+	@Test
+	public void testViewAccountDetails() {
+		// Login
+		WebElement loginBtn = driver.findElement(By.xpath("//a[contains(text(),'Log In')]"));
+		loginBtn.click();
+		
+		WebElement username = driver.findElement(By.xpath("//input[@name='username']"));
+		username.sendKeys("john");
+		
+		WebElement password = driver.findElement(By.xpath("//input[@name='password']"));
+		password.sendKeys("demo");
+		
+		WebElement loginBtn2 = driver.findElement(By.xpath("//input[@value='Log In']"));
+		loginBtn2.click();
+		
+		// Navigate to Accounts Overview
+		WebElement accountsOverviewLink = driver.findElement(By.xpath("//a[contains(text(),'Accounts Overview')]"));
+		accountsOverviewLink.click();
+		
+		// Verify account details are displayed
+		WebElement accountDetailsTitle = driver.findElement(By.xpath("//h1[contains(text(),'Accounts Overview')]"));
+		Assert.assertEquals(accountDetailsTitle.getText(), "Accounts Overview");
+		
+		WebElement accountNumber = driver.findElement(By.xpath("//table[@id='accountTable']//tbody//tr[1]/td[1]"));
+		Assert.assertEquals(accountNumber.getText(), "12456");
+		
+		WebElement balance = driver.findElement(By.xpath("//table[@id='accountTable']//tbody//tr[1]/td[2]"));
+		Assert.assertEquals(balance.getText(), "$982.00");
+		
+		WebElement availableBalance = driver.findElement(By.xpath("//table[@id='accountTable']//tbody//tr[1]/td[3]"));
+		Assert.assertEquals(availableBalance.getText(), "$982.00");
+	}
+	
+	@AfterTest
+	public void teardown() {
+		driver.quit();
+	}
+}
