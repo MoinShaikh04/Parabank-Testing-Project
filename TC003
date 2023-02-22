@@ -1,0 +1,89 @@
+package project1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.Test;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class TC03 {
+  @Test
+  public void ResetPassword() {
+	  WebDriverManager.chromedriver().setup();
+	  WebDriver driver = new ChromeDriver();
+	  
+	  driver.get("https://parabank.parasoft.com/parabank/index.htm?ConnType=JDBC");
+	  String Title = driver.getTitle();
+	  String ActTitle = "ParaBank | Welcome | Online Banking";
+	  if(Title.equals(ActTitle)) {
+		  System.out.println("Home Page verified");
+	  }
+	  else {
+		  System.out.println("Page not verified");
+	  }
+	  
+	  WebElement Login = driver.findElement(By.xpath("//a[contains(text(),'Log In')]"));
+	  Login.click();
+	  
+	  String title2 = driver.getTitle();
+	  String ActTitle2 = "ParaBank | Log In";
+	  if(title2.equals(ActTitle2)) {
+		  System.out.println("Login page verified");
+	  }
+	  else {
+		  System.out.println("Page not verified");
+	  }
+	  
+	  WebElement ForgotPwd = driver.findElement(By.xpath("//a[contains(text(),'Forgot Password')]"));
+	  ForgotPwd.click();
+	  
+	  String title3 = driver.getTitle();
+	  String ActTitle3 = "ParaBank | Forgot Password";
+	  if(title3.equals(ActTitle3)) {
+		  System.out.println("Forgot Password page verified");
+	  }
+	  else {
+		  System.out.println("Page not verified");
+	  }
+	  
+	  WebElement Username = driver.findElement(By.id("username"));
+	  Username.sendKeys("testuser");
+	  
+	  WebElement SSN = driver.findElement(By.id("ssn"));
+	  SSN.sendKeys("123-45-6789");
+	  
+	  WebElement SubmitBtn = driver.findElement(By.xpath("//input[@value='Submit']"));
+	  SubmitBtn.click();
+	  
+	  String title4 = driver.getTitle();
+	  String ActTitle4 = "ParaBank | Reset Password";
+	  if(title4.equals(ActTitle4)) {
+		  System.out.println("Reset Password page verified");
+	  }
+	  else {
+		  System.out.println("Page not verified");
+	  }
+	  
+	  WebElement NewPwd = driver.findElement(By.id("password"));
+	  NewPwd.sendKeys("newpassword");
+	  
+	  WebElement ConfirmPwd = driver.findElement(By.id("repeatedPassword"));
+	  ConfirmPwd.sendKeys("newpassword");
+	  
+	  WebElement ResetBtn = driver.findElement(By.xpath("//input[@value='Reset Password']"));
+	  ResetBtn.click();
+	  
+	  String Title5 = driver.getTitle();
+	  String ActTitle5 = "ParaBank | Reset Complete";
+	  if(Title5.equals(ActTitle5)) {
+		  System.out.println("Password reset successfully");
+	  }
+	  else {
+		  System.out.println("Password reset unsuccessful");
+	  }
+	  
+	  
+  }
+}
