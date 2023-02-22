@@ -1,0 +1,43 @@
+@Test
+public void testTransferFunds() {
+    // Launch ParaBank website
+    WebDriver driver = new ChromeDriver();
+    driver.get("https://parabank.parasoft.com/parabank/index.htm");
+
+    // Login with valid credentials
+    WebElement loginButton = driver.findElement(By.xpath("//a[text()='Log In']"));
+    loginButton.click();
+    WebElement usernameField = driver.findElement(By.name("username"));
+    usernameField.sendKeys("user123");
+    WebElement passwordField = driver.findElement(By.name("password"));
+    passwordField.sendKeys("pass123");
+    WebElement submitButton = driver.findElement(By.xpath("//input[@type='submit']"));
+    submitButton.click();
+
+    // Go to Transfer Funds page
+    WebElement transferFundsLink = driver.findElement(By.xpath("//a[text()='Transfer Funds']"));
+    transferFundsLink.click();
+
+    // Select accounts to transfer funds between
+    WebElement fromAccountDropdown = driver.findElement(By.name("fromAccountId"));
+    Select fromAccountSelect = new Select(fromAccountDropdown);
+    fromAccountSelect.selectByVisibleText("Checking 123456");
+    WebElement toAccountDropdown = driver.findElement(By.name("toAccountId"));
+    Select toAccountSelect = new Select(toAccountDropdown);
+    toAccountSelect.selectByVisibleText("Savings 789012");
+
+    // Enter amount to transfer
+    WebElement amountField = driver.findElement(By.name("amount"));
+    amountField.sendKeys("100");
+
+    // Click Transfer button
+    WebElement transferButton = driver.findElement(By.xpath("//input[@type='submit']"));
+    transferButton.click();
+
+    // Verify funds are transferred successfully
+    WebElement successMessage = driver.findElement(By.xpath("//span[text()='Transfer Complete!']"));
+    Assert.assertNotNull(successMessage);
+
+    // Close the browser
+    driver.quit();
+}
