@@ -1,0 +1,59 @@
+package project1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class TC07 {
+  
+  WebDriver driver;
+
+  @BeforeTest
+  public void setUp() {
+    WebDriverManager.chromedriver().setup();
+    driver = new ChromeDriver();
+    driver.get("https://parabank.parasoft.com/parabank/index.htm?ConnType=JDBC");
+  }
+
+  @Test(priority=1)
+  public void login() {
+    WebElement username = driver.findElement(By.name("username"));
+    WebElement password = driver.findElement(By.name("password"));
+    WebElement loginBtn = driver.findElement(By.xpath("//input[@value='Log In']"));
+
+    username.sendKeys("john");
+    password.sendKeys("demo");
+    loginBtn.click();
+    
+    String expectedTitle = "ParaBank | Accounts Overview";
+    String actualTitle = driver.getTitle();
+    Assert.assertEquals(actualTitle, expectedTitle);
+  }
+  
+  @Test(priority=2)
+  public void viewTransactionHistory() {
+    WebElement viewTransactionsLink = driver.findElement(By.linkText("View Transactions"));
+    viewTransactionsLink.click();
+    
+    String expectedTitle = "ParaBank | Transaction Results";
+    String actualTitle = driver.getTitle();
+    Assert.assertEquals(actualTitle, expectedTitle);
+    
+    // Assuming there is at least one transaction in the history
+    WebElement transactionTable = driver.findElement(By.xpath("//table[@id='transactionTable']"));
+    Assert.assertNotNull(transactionTable);
+  }
+
+  @AfterTest
+  public void tearDown() {
+    driver.quit();
+  }
+  
+}
