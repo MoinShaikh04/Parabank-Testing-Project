@@ -1,0 +1,78 @@
+package project1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class TC04 {
+
+    WebDriver driver;
+
+    @BeforeTest
+    public void setUp() {
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get("https://parabank.parasoft.com/parabank/index.htm?ConnType=JDBC");
+    }
+
+    @Test
+    public void updatePersonalDetails() throws InterruptedException {
+        // Login with valid credentials
+        WebElement loginButton = driver.findElement(By.xpath("//a[contains(text(),'Log In')]"));
+        loginButton.click();
+        WebElement usernameField = driver.findElement(By.xpath("//input[@name='username']"));
+        usernameField.sendKeys("john");
+        WebElement passwordField = driver.findElement(By.xpath("//input[@name='password']"));
+        passwordField.sendKeys("demo");
+        WebElement loginSubmitButton = driver.findElement(By.xpath("//input[@value='Log In']"));
+        loginSubmitButton.click();
+
+        // Navigate to Update Contact Info page
+        WebElement settingsLink = driver.findElement(By.xpath("//a[contains(text(),'Settings')]"));
+        settingsLink.click();
+        WebElement updateContactInfoLink = driver.findElement(By.xpath("//a[contains(text(),'Update Contact Info')]"));
+        updateContactInfoLink.click();
+
+        // Update personal details
+        WebElement firstNameField = driver.findElement(By.xpath("//input[@id='customer.firstName']"));
+        firstNameField.clear();
+        firstNameField.sendKeys("Johnathan");
+        WebElement lastNameField = driver.findElement(By.xpath("//input[@id='customer.lastName']"));
+        lastNameField.clear();
+        lastNameField.sendKeys("Doe");
+        WebElement addressField = driver.findElement(By.xpath("//input[@id='customer.address.street']"));
+        addressField.clear();
+        addressField.sendKeys("123 Main St");
+        WebElement cityField = driver.findElement(By.xpath("//input[@id='customer.address.city']"));
+        cityField.clear();
+        cityField.sendKeys("New York");
+        WebElement stateField = driver.findElement(By.xpath("//input[@id='customer.address.state']"));
+        stateField.clear();
+        stateField.sendKeys("NY");
+        WebElement zipCodeField = driver.findElement(By.xpath("//input[@id='customer.address.zipCode']"));
+        zipCodeField.clear();
+        zipCodeField.sendKeys("10001");
+        WebElement phoneNumberField = driver.findElement(By.xpath("//input[@id='customer.phoneNumber']"));
+        phoneNumberField.clear();
+        phoneNumberField.sendKeys("1234567890");
+        WebElement updateButton = driver.findElement(By.xpath("//input[@value='Update']"));
+        updateButton.click();
+
+        // Verify personal details are updated successfully
+        String successMessage = driver.findElement(By.xpath("//p[contains(text(),'Your contact phone number has been updated.')]")).getText();
+        Assert.assertEquals(successMessage, "Your contact phone number has been updated.");
+    }
+
+    @AfterTest
+    public void tearDown() {
+        driver.quit();
+    }
+}
