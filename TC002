@@ -1,0 +1,45 @@
+package project1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class TC02 {
+    @Test
+    public void LoginWithInvalidCredentials() {
+        // set up the WebDriver
+        WebDriverManager.chromedriver().setup();
+        WebDriver driver = new ChromeDriver();
+
+        // navigate to the ParaBank website
+        driver.get("https://parabank.parasoft.com/parabank/index.htm?ConnType=JDBC");
+
+        // click on the 'Log In' button
+        WebElement loginButton = driver.findElement(By.xpath("//a[contains(text(),'Log In')]"));
+        loginButton.click();
+
+        // enter invalid login credentials
+        WebElement usernameField = driver.findElement(By.name("username"));
+        usernameField.sendKeys("invaliduser");
+        WebElement passwordField = driver.findElement(By.name("password"));
+        passwordField.sendKeys("invalidpassword");
+
+        // click on the 'Log In' button
+        WebElement submitButton = driver.findElement(By.xpath("//input[@value='Log In']"));
+        submitButton.click();
+
+        // verify that an error message is displayed
+        WebElement errorMessage = driver.findElement(By.xpath("//div[@class='error']"));
+        String actualErrorMessage = errorMessage.getText();
+        String expectedErrorMessage = "The username and password could not be verified.";
+        Assert.assertEquals(actualErrorMessage, expectedErrorMessage, "Error message not displayed");
+
+        // close the browser
+        driver.quit();
+    }
+}
